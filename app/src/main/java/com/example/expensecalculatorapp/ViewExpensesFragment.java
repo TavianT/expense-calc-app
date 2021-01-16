@@ -1,24 +1,19 @@
 package com.example.expensecalculatorapp;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link HomePageFragment#newInstance} factory method to
+ * Use the {@link ViewExpensesFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HomePageFragment extends Fragment {
+public class ViewExpensesFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -29,13 +24,7 @@ public class HomePageFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private ImageView linkedInImageView;
-    private ImageView githubImageView;
-
-    private Button createExpenseButton;
-    private Button viewExpensesButton;
-
-    public HomePageFragment() {
+    public ViewExpensesFragment() {
         // Required empty public constructor
     }
 
@@ -45,11 +34,11 @@ public class HomePageFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment homePageFragment.
+     * @return A new instance of fragment ViewExpensesFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static HomePageFragment newInstance(String param1, String param2) {
-        HomePageFragment fragment = new HomePageFragment();
+    public static ViewExpensesFragment newInstance(String param1, String param2) {
+        ViewExpensesFragment fragment = new ViewExpensesFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -70,14 +59,6 @@ public class HomePageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_home_page, container, false);
-
-        //Add these to the about page
-        //linkedInImageView = v.findViewById(R.id.linkedInLogo);
-        //githubImageView = v.findViewById(R.id.githubLogo);
-        //createExpenseButton = v.findViewById(R.id.createExpenseButton);
-        //viewExpensesButton = v.findViewById(R.id.viewExpensesButton);
-
-        return v;
+        return inflater.inflate(R.layout.fragment_view_expenses, container, false);
     }
 }

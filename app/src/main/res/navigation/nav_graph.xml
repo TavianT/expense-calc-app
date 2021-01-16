@@ -7,15 +7,11 @@
     <fragment
         android:id="@+id/homePageFragment"
         android:name="com.example.expensecalculatorapp.HomePageFragment"
-        android:label="fragment_home_page"
-        tools:layout="@layout/fragment_home_page" >
-        <action
-            android:id="@+id/action_homePageFragment_to_createExpenseFragment"
-            app:destination="@id/createExpenseFragment" />
-    </fragment>
+        android:label="Home"
+        tools:layout="@layout/fragment_home_page" />
     <fragment
         android:id="@+id/createExpenseFragment"
         android:name="com.example.expensecalculatorapp.CreateExpenseFragment"
-        android:label="fragment_create_expense"
+        android:label="Create an Expense"
         tools:layout="@layout/fragment_create_expense" />
 </navigation>

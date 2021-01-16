@@ -6,56 +6,35 @@
     android:layout_height="match_parent"
     tools:context=".HomePageFragment">
 
-    <ImageView
-        android:id="@+id/linkedInLogo"
-        android:layout_width="124dp"
-        android:layout_height="111dp"
-        android:layout_marginStart="60dp"
-        android:layout_marginBottom="16dp"
-        android:contentDescription="LinkedIn button that takes you to my LinkedIn"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/li_logo" />
-
-    <ImageView
-        android:id="@+id/githubLogo"
+    <TextView
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="57dp"
-        android:layout_marginEnd="49dp"
-        android:layout_marginBottom="16dp"
-        android:contentDescription="Github button that takes you to my github"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/linkedInLogo"
-        app:srcCompat="@drawable/gh_logo_white" />
-
-    <Button
-        android:id="@+id/createExpenseButton"
-        android:layout_width="275dp"
-        android:layout_height="75dp"
-        android:layout_marginStart="68dp"
-        android:layout_marginTop="41dp"
-        android:layout_marginEnd="68dp"
-        android:text="CREATE EXPENSE"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="20dp"
+        android:text="Data Selector here"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/viewExpensesButton"
-        android:layout_width="275dp"
-        android:layout_height="75dp"
-        android:layout_marginStart="68dp"
-        android:layout_marginTop="48dp"
-        android:layout_marginEnd="68dp"
-        android:text="VIEW EXPENSES"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="32dp"
+        android:text="Total expenses for X month"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/createExpenseButton" />
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="29dp"
+        android:layout_marginTop="71dp"
+        android:layout_marginEnd="37dp"
+        android:text="Total Amount for X month"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView2"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

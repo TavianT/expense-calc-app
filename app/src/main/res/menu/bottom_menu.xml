@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/homePageFragment"
+        android:title="Home"
+        android:icon="@drawable/ic_baseline_home"/>
+
+    <item
+        android:id="@+id/createExpenseFragment"
+        android:title="Create Expense"
+        android:icon="@drawable/ic_baseline_create"/>
+
+    <item
+        android:id="@+id/viewExpensesFragment"
+        android:title="View Expenses"
+        android:icon="@drawable/ic_baseline_attach_money"/>
+
+    <item
+        android:id="@+id/aboutFragment"
+        android:title="About"
+        android:icon="@drawable/ic_baseline_help"/>
+</menu>
