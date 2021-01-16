@@ -11,11 +11,6 @@ import android.widget.ImageView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ImageView linkedInImageView;
-    private ImageView githubImageView;
-
-    private Button createExpenseButton;
-    private Button viewExpensesButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

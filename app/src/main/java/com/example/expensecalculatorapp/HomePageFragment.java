@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,17 +70,19 @@ public class HomePageFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        linkedInImageView = getView().findViewById(R.id.linkedInLogo);
-        githubImageView = getView().findViewById(R.id.githubLogo);
-        createExpenseButton = getView().findViewById(R.id.createExpenseButton);
-        viewExpensesButton = getView().findViewById(R.id.viewExpensesButton);
+        View v = inflater.inflate(R.layout.fragment_home_page, container, false);
+
+        linkedInImageView = v.findViewById(R.id.linkedInLogo);
+        githubImageView = v.findViewById(R.id.githubLogo);
+        createExpenseButton = v.findViewById(R.id.createExpenseButton);
+        viewExpensesButton = v.findViewById(R.id.viewExpensesButton);
 
         linkedInImageView.setOnClickListener(this);
         githubImageView.setOnClickListener(this);
         createExpenseButton.setOnClickListener(this);
         viewExpensesButton.setOnClickListener(this);
 
-        return inflater.inflate(R.layout.fragment_home_page, container, false);
+        return v;
     }
 
     @Override
@@ -91,10 +94,8 @@ public class HomePageFragment extends Fragment implements View.OnClickListener {
         } else if (v == githubImageView) {
             browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/TavianT/expense-calc-app"));
             startActivity(browserIntent);
-        } /*else if (v == createExpenseButton) {
-            Intent createExpenseIntent = new Intent(this, CreateExpenseActivity.class);
-        } else if (v == viewExpensesButton) {
-            Intent createExpenseIntent = new Intent(this, ViewExpensesActivity.class);
-        }*/
+        } else if (v == createExpenseButton) {
+            NavHostFragment.findNavController(this).navigate(R.id.action_homePageFragment_to_createExpenseFragment);
+        }
     }
 }
