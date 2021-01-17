@@ -18,6 +18,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.List;
 
 /**
@@ -36,18 +38,16 @@ public class CreateExpenseFragment extends Fragment implements View.OnClickListe
     private String mParam1;
     private String mParam2;
 
-    AutoCompleteTextView expenseTitleTextView;
-    Spinner typeSpinner;
-    Spinner currencySpinner;
+    AutoCompleteTextView expenseTitleTextView, memoTextView;
+    Spinner categorySpinner, currencySpinner, paymentTypeSpinner, accountSpinner;
+    FloatingActionButton addCategoryButton, addAccountButton;
     EditText amountEditText;
-    Button selectDateButton;
+    Button selectDateButton, submitButton;
     TextView dateTextView;
-    AutoCompleteTextView memoTextView;
-    Button submitButton;
 
     int textColor;
 
-    List<String> typeList;
+    List<String> categoryList;
 
     public CreateExpenseFragment() {
         // Required empty public constructor
@@ -76,7 +76,7 @@ public class CreateExpenseFragment extends Fragment implements View.OnClickListe
         super.onCreate(savedInstanceState);
 
         FileManagement fileManagement = new FileManagement();
-        typeList = fileManagement.ReadListFromFile("expenseTypeList.txt",getActivity());
+        categoryList = fileManagement.ReadListFromFile("expenseCategoryList.txt",getActivity());
 
         int nightModeFlags =
                 getContext().getResources().getConfiguration().uiMode &
@@ -87,8 +87,6 @@ public class CreateExpenseFragment extends Fragment implements View.OnClickListe
                 break;
 
             case Configuration.UI_MODE_NIGHT_NO:
-                textColor = Color.BLACK;
-                break;
 
             case Configuration.UI_MODE_NIGHT_UNDEFINED:
                 textColor = Color.BLACK;
@@ -100,25 +98,38 @@ public class CreateExpenseFragment extends Fragment implements View.OnClickListe
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_create_expense, container, false);
-        expenseTitleTextView = v.findViewById(R.id.expenseTitleTextView);
-        typeSpinner = v.findViewById(R.id.typeSpinner);
+
+        categorySpinner = v.findViewById(R.id.categorySpinner);
         currencySpinner = v.findViewById(R.id.currencySpinner);
+        paymentTypeSpinner = v.findViewById(R.id.paymentTypeSpinner);
+        accountSpinner = v.findViewById(R.id.accountSpinner);
+
+        expenseTitleTextView = v.findViewById(R.id.expenseTitleTextView);
         amountEditText = v.findViewById(R.id.amountNumberDecimal);
-        selectDateButton = v.findViewById(R.id.selectDateButton);
-        dateTextView = v.findViewById(R.id.dateTextView);
-        submitButton = v.findViewById(R.id.submitButton);
         memoTextView = v.findViewById(R.id.memoAutoCompleteTextView);
 
+        selectDateButton = v.findViewById(R.id.selectDateButton);
+        submitButton = v.findViewById(R.id.submitButton);
+        addAccountButton = v.findViewById(R.id.addAccountFloatingActionButton);
+
+        dateTextView = v.findViewById(R.id.dateTextView);
         dateTextView.setText("");
 
-        typeSpinner.setOnItemSelectedListener(this);
+        paymentTypeSpinner.setOnItemSelectedListener(this);
+        categorySpinner.setOnItemSelectedListener(this);
         currencySpinner.setOnItemSelectedListener(this);
+        accountSpinner.setOnItemSelectedListener(this);
+
         selectDateButton.setOnClickListener(this);
         submitButton.setOnClickListener(this);
 
-        ArrayAdapter<String> typeAdapter = new ArrayAdapter<>(getActivity().getBaseContext(), android.R.layout.simple_spinner_dropdown_item, typeList);
+        ArrayAdapter<String> categoryAdapter = new ArrayAdapter<>(getActivity().getBaseContext(), android.R.layout.simple_spinner_dropdown_item, categoryList);
+        ArrayAdapter<CharSequence> currencyAdapter = ArrayAdapter.createFromResource(getActivity().getBaseContext(),R.array.expense_currency_array, android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<CharSequence> paymentTypeAdapter = ArrayAdapter.createFromResource(getActivity().getBaseContext(),R.array.payment_type_array, android.R.layout.simple_spinner_dropdown_item);
 
-        typeSpinner.setAdapter(typeAdapter);
+        categorySpinner.setAdapter(categoryAdapter);
+        currencySpinner.setAdapter(currencyAdapter);
+        paymentTypeSpinner.setAdapter(paymentTypeAdapter);
         return v;
     }
 
@@ -127,7 +138,13 @@ public class CreateExpenseFragment extends Fragment implements View.OnClickListe
         if (v == selectDateButton) {
 
         } else if (v == submitButton) {
-
+          /*  getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    getView().findViewById(R.id.accountSpinner).setVisibility(View.VISIBLE);
+                    getView().findViewById(R.id.addAccountFloatingActionButton).setVisibility(View.VISIBLE);
+                }
+            }); */
         }
     }
 
@@ -137,6 +154,18 @@ public class CreateExpenseFragment extends Fragment implements View.OnClickListe
         if (adapterView.getCount() != 0) {
             ((TextView) adapterView.getChildAt(0)).setTextColor(textColor);
             ((TextView) adapterView.getChildAt(0)).setTextSize(20);
+        }
+        if (adapterView.getId() == R.id.paymentTypeSpinner) {
+            Log.d("payment spinner", "Reached first condition");
+            Log.d("payment spinner", "onItemSelected: adapterView.getItemAtPosition(pos) = " + adapterView.getItemAtPosition(pos));
+            if (adapterView.getItemAtPosition(pos).toString().equals("Debit") || adapterView.getItemAtPosition(pos).toString().equals("Credit")) {
+                Log.d("payment spinner", "Reached second condition");
+                getView().findViewById(R.id.accountSpinner).setVisibility(View.VISIBLE);
+                getView().findViewById(R.id.addAccountFloatingActionButton).setVisibility(View.VISIBLE);
+            } else {
+                getView().findViewById(R.id.accountSpinner).setVisibility(View.GONE);
+                getView().findViewById(R.id.addAccountFloatingActionButton).setVisibility(View.GONE);
+            }
         }
     }
 

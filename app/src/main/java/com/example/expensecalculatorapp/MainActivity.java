@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         typeList.add("Gift");
         typeList.add("Other");
 
-        String fileName = "expenseTypeList.txt";
+        String fileName = "expenseCategoryList.txt";
         FileManagement fileManagement = new FileManagement();
         if (!fileManagement.fileExists(fileName)) {
             fileManagement.WriteListToFile(typeList, fileName, this);

@@ -8,23 +8,34 @@
 
 
     <Spinner
-        android:id="@+id/typeSpinner"
-        android:layout_width="299dp"
+        android:id="@+id/categorySpinner"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="45dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="40dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/expenseTitleTextView" />
+
+    <Spinner
+        android:id="@+id/accountSpinner"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="35dp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/paymentTypeSpinner" />
 
     <AutoCompleteTextView
         android:id="@+id/expenseTitleTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="30dp"
         android:layout_marginBottom="30dp"
         android:hint="Name of Expense"
         android:textSize="24sp"
         android:textStyle="normal"
-        app:layout_constraintBottom_toTopOf="@+id/typeSpinner"
+        app:layout_constraintBottom_toTopOf="@+id/categorySpinner"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -32,22 +43,22 @@
 
     <EditText
         android:id="@+id/amountNumberDecimal"
-        android:layout_width="350dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="44dp"
+        android:layout_width="304dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="40dp"
         android:ems="10"
         android:hint="Amount"
         android:inputType="numberDecimal"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/typeSpinner" />
+        app:layout_constraintTop_toBottomOf="@+id/categorySpinner" />
 
     <Button
         android:id="@+id/selectDateButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="45dp"
+        android:layout_marginTop="40dp"
         android:text="SELECT DATE"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/amountNumberDecimal" />
@@ -57,7 +68,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="48dp"
         android:layout_marginEnd="76dp"
         android:text="dateTextView"
         android:textSize="24sp"
@@ -70,51 +81,73 @@
         android:id="@+id/memoAutoCompleteTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="45dp"
+        android:layout_marginTop="35dp"
         android:hint="Memo"
-        android:textSize="20sp"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/selectDateButton" />
+        app:layout_constraintTop_toBottomOf="@+id/accountSpinner" />
 
     <Button
         android:id="@+id/submitButton"
         android:layout_width="303dp"
         android:layout_height="79dp"
         android:layout_marginStart="54dp"
-        android:layout_marginTop="133dp"
         android:layout_marginEnd="54dp"
-        android:layout_marginBottom="78dp"
+        android:layout_marginBottom="85dp"
         android:text="SUBMIT"
         android:textSize="30sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/memoAutoCompleteTextView" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Spinner
         android:id="@+id/currencySpinner"
-        android:layout_width="48dp"
-        android:layout_height="55dp"
+        android:layout_width="85dp"
+        android:layout_height="58dp"
         android:layout_marginStart="6dp"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="40dp"
         android:layout_marginEnd="7dp"
         app:layout_constraintEnd_toStartOf="@+id/amountNumberDecimal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/typeSpinner" />
+        app:layout_constraintTop_toBottomOf="@+id/categorySpinner" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/addTypeFloatingActionButton"
+        android:id="@+id/addCategoryFloatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="36dp"
-        android:layout_marginTop="29dp"
+        android:layout_marginTop="25dp"
         android:layout_marginEnd="20dp"
         android:clickable="true"
         android:src="@drawable/ic_round_add"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/typeSpinner"
+        app:layout_constraintStart_toEndOf="@+id/categorySpinner"
         app:layout_constraintTop_toBottomOf="@+id/expenseTitleTextView" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addAccountFloatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="21dp"
+        android:layout_marginEnd="20dp"
+        android:clickable="true"
+        android:src="@drawable/ic_round_add"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/accountSpinner"
+        app:layout_constraintTop_toBottomOf="@+id/paymentTypeSpinner" />
+
+    <Spinner
+        android:id="@+id/paymentTypeSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="35dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/selectDateButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

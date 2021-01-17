@@ -28,12 +28,9 @@ public class FileManagement {
     {
         try {
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput(fileName, Context.MODE_PRIVATE));
-            //BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
             for (String item : list) {
                 outputStreamWriter.write(item);
                 outputStreamWriter.write("\n");
-                //bufferedWriter.write(item);
-                //bufferedWriter.newLine();
             }
             outputStreamWriter.close();
         } catch (IOException e) {
@@ -54,7 +51,6 @@ public class FileManagement {
                     line = bufferedReader.readLine();
                 }
             }
-            //Log.d("typeList", typeList.get(0));
         } catch (FileNotFoundException e) {
             Log.e("Exception", "File not found: " + e.toString());
         } catch(IOException e) {
