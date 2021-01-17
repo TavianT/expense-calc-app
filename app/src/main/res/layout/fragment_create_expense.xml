@@ -24,7 +24,7 @@
         android:layout_marginBottom="30dp"
         android:hint="Name of Expense"
         android:textSize="24sp"
-        android:textStyle="bold"
+        android:textStyle="normal"
         app:layout_constraintBottom_toTopOf="@+id/typeSpinner"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
