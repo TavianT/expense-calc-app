@@ -1,24 +1,31 @@
 package com.example.expensecalculatorapp;
 
+import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.util.List;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link CreateExpenseFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CreateExpenseFragment extends Fragment implements View.OnClickListener{
+public class CreateExpenseFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -37,6 +44,10 @@ public class CreateExpenseFragment extends Fragment implements View.OnClickListe
     TextView dateTextView;
     AutoCompleteTextView memoTextView;
     Button submitButton;
+
+    int textColor;
+
+    List<String> typeList;
 
     public CreateExpenseFragment() {
         // Required empty public constructor
@@ -64,7 +75,25 @@ public class CreateExpenseFragment extends Fragment implements View.OnClickListe
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        FileManagement fileManagement = new FileManagement();
+        typeList = fileManagement.ReadListFromFile("expenseTypeList.txt",getActivity());
 
+        int nightModeFlags =
+                getContext().getResources().getConfiguration().uiMode &
+                        Configuration.UI_MODE_NIGHT_MASK;
+        switch (nightModeFlags) {
+            case Configuration.UI_MODE_NIGHT_YES:
+                textColor = Color.WHITE;
+                break;
+
+            case Configuration.UI_MODE_NIGHT_NO:
+                textColor = Color.BLACK;
+                break;
+
+            case Configuration.UI_MODE_NIGHT_UNDEFINED:
+                textColor = Color.BLACK;
+                break;
+        }
     }
 
     @Override
@@ -78,10 +107,18 @@ public class CreateExpenseFragment extends Fragment implements View.OnClickListe
         selectDateButton = v.findViewById(R.id.selectDateButton);
         dateTextView = v.findViewById(R.id.dateTextView);
         submitButton = v.findViewById(R.id.submitButton);
+        memoTextView = v.findViewById(R.id.memoAutoCompleteTextView);
 
         dateTextView.setText("");
 
-        
+        typeSpinner.setOnItemSelectedListener(this);
+        currencySpinner.setOnItemSelectedListener(this);
+        selectDateButton.setOnClickListener(this);
+        submitButton.setOnClickListener(this);
+
+        ArrayAdapter<String> typeAdapter = new ArrayAdapter<>(getActivity().getBaseContext(), android.R.layout.simple_spinner_dropdown_item, typeList);
+
+        typeSpinner.setAdapter(typeAdapter);
         return v;
     }
 
@@ -92,5 +129,19 @@ public class CreateExpenseFragment extends Fragment implements View.OnClickListe
         } else if (v == submitButton) {
 
         }
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View v, int pos, long id) {
+        //FIXME: java.lang.NullPointerException: Attempt to invoke virtual method 'void android.widget.TextView.setTextColor(int)' on a null object reference
+        if (adapterView.getCount() != 0) {
+            ((TextView) adapterView.getChildAt(0)).setTextColor(textColor);
+            ((TextView) adapterView.getChildAt(0)).setTextSize(20);
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
     }
 }
