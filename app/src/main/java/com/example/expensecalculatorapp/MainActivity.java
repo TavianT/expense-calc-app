@@ -14,13 +14,17 @@ import android.util.Log;
 import com.google.android.material.bottomnavigation.BottomNavigationMenu;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     BottomNavigationView  bottomNavigationView;
     NavController navController;
+
+    FileManagement fileManagement;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,31 +39,27 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(bottomNavigationView,navController);
 
-        setupTypeList();
+        fileManagement = new FileManagement();
+
+        String categoryFileName = "expenseCategoryList.txt";
+        String accountFileName = "expenseAccountList.txt";
+
+        if(!fileManagement.fileExists(categoryFileName)) {
+            String[] categoryArray = {"Food", "Bills", "Travel", "Home", "Entertainment", "Leisure", "Shopping", "Clothing", "Insurance", "Tax", "Healthcare", "Gift", "Other"};
+            List<String> categoryList = new ArrayList<>(Arrays.asList(categoryArray));
+            createListFile(fileManagement, categoryFileName, categoryList);
+        }
+        if(!fileManagement.fileExists(accountFileName)) {
+            String[] accountArray = {"PayPal", "HSBC", "Lloyds", "Halifax", "Barclays", "RBS", "TSB", "Natwest", "Monzo", "Nationwide", "Santander", "Co-operative", "Tesco", "Other"};
+            List<String> accountList = new ArrayList<>(Arrays.asList(accountArray));
+            createListFile(fileManagement, accountFileName, accountList);
+        }
+
+        
     }
 
-    private void setupTypeList()
+    private void createListFile(FileManagement fileManagement, String fileName,List<String> list)
     {
-        List<String> typeList = new ArrayList<>();
-        typeList.add("Food");
-        typeList.add("Bills");
-        typeList.add("Travel");
-        typeList.add("Home");
-        typeList.add("Entertainment");
-        typeList.add("Leisure");
-        typeList.add("Shopping");
-        typeList.add("Clothing");
-        typeList.add("Insurance");
-        typeList.add("Tax");
-        typeList.add("Healthcare");
-        typeList.add("Gift");
-        typeList.add("Other");
-
-        String fileName = "expenseCategoryList.txt";
-        FileManagement fileManagement = new FileManagement();
-        if (!fileManagement.fileExists(fileName)) {
-            fileManagement.WriteListToFile(typeList, fileName, this);
-        }
-        //List<String> newTypeList = fileManagement.ReadListFromFile(fileName,this);
+            fileManagement.WriteListToFile(list, fileName, this);
     }
 }

@@ -14,4 +14,21 @@
         <item>Debit</item>
         <item>Credit</item>
     </string-array>
+
+    <string-array name="account_type_array">
+        <item>PayPal</item>
+        <item>HSBC</item>
+        <item>Lloyds</item>
+        <item>Halifax</item>
+        <item>Barclays</item>
+        <item>Royal Bank of Scotlannd</item>
+        <item>TSB</item>
+        <item>Natwest</item>
+        <item>Monzo</item>
+        <item>Nationwide</item>
+        <item>Santander</item>
+        <item>Co-operative</item>
+        <item>Tesco</item>
+        <item>Other</item>
+    </string-array>
 </resources>

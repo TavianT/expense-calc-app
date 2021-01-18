@@ -1,5 +1,7 @@
 package com.example.expensecalculatorapp;
 
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -14,12 +16,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -27,7 +31,7 @@ import java.util.List;
  * Use the {@link CreateExpenseFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CreateExpenseFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
+public class CreateExpenseFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener, DatePickerDialog.OnDateSetListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -47,7 +51,11 @@ public class CreateExpenseFragment extends Fragment implements View.OnClickListe
 
     int textColor;
 
+    DatePickerDialog datePickerDialog;
+    Calendar dateSelected;
+
     List<String> categoryList;
+    List<String> accountList;
 
     public CreateExpenseFragment() {
         // Required empty public constructor
@@ -77,6 +85,12 @@ public class CreateExpenseFragment extends Fragment implements View.OnClickListe
 
         FileManagement fileManagement = new FileManagement();
         categoryList = fileManagement.ReadListFromFile("expenseCategoryList.txt",getActivity());
+        accountList = fileManagement.ReadListFromFile("expenseAccountList.txt",getActivity());
+        final Calendar calendar = Calendar.getInstance();
+        int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+        int currentMonth = calendar.get(Calendar.MONTH);
+        int currentYear = calendar.get(Calendar.YEAR);
+        datePickerDialog = new DatePickerDialog(getContext(),this,currentYear,currentMonth,currentDay);
 
         int nightModeFlags =
                 getContext().getResources().getConfiguration().uiMode &
@@ -111,6 +125,7 @@ public class CreateExpenseFragment extends Fragment implements View.OnClickListe
         selectDateButton = v.findViewById(R.id.selectDateButton);
         submitButton = v.findViewById(R.id.submitButton);
         addAccountButton = v.findViewById(R.id.addAccountFloatingActionButton);
+        addCategoryButton = v.findViewById(R.id.addCategoryFloatingActionButton);
 
         dateTextView = v.findViewById(R.id.dateTextView);
         dateTextView.setText("");
@@ -122,29 +137,32 @@ public class CreateExpenseFragment extends Fragment implements View.OnClickListe
 
         selectDateButton.setOnClickListener(this);
         submitButton.setOnClickListener(this);
+        addAccountButton.setOnClickListener(this);
+        addCategoryButton.setOnClickListener(this);
 
         ArrayAdapter<String> categoryAdapter = new ArrayAdapter<>(getActivity().getBaseContext(), android.R.layout.simple_spinner_dropdown_item, categoryList);
         ArrayAdapter<CharSequence> currencyAdapter = ArrayAdapter.createFromResource(getActivity().getBaseContext(),R.array.expense_currency_array, android.R.layout.simple_spinner_dropdown_item);
         ArrayAdapter<CharSequence> paymentTypeAdapter = ArrayAdapter.createFromResource(getActivity().getBaseContext(),R.array.payment_type_array, android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<String> accountAdapter = new ArrayAdapter<>(getActivity().getBaseContext(), android.R.layout.simple_spinner_dropdown_item, accountList);
+
 
         categorySpinner.setAdapter(categoryAdapter);
         currencySpinner.setAdapter(currencyAdapter);
         paymentTypeSpinner.setAdapter(paymentTypeAdapter);
+        accountSpinner.setAdapter(accountAdapter);
+
         return v;
     }
 
     @Override
     public void onClick(View v) {
         if (v == selectDateButton) {
+            datePickerDialog.show();
 
         } else if (v == submitButton) {
-          /*  getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    getView().findViewById(R.id.accountSpinner).setVisibility(View.VISIBLE);
-                    getView().findViewById(R.id.addAccountFloatingActionButton).setVisibility(View.VISIBLE);
-                }
-            }); */
+
+        } else if(v == addCategoryButton) {
+            addCategory();
         }
     }
 
@@ -172,5 +190,17 @@ public class CreateExpenseFragment extends Fragment implements View.OnClickListe
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
 
+    }
+
+    @Override
+    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+        int realMonth = month + 1;
+        dateTextView.setText(day + "/" + realMonth + "/" + year);
+        dateSelected.set(year, month, day);
+    }
+
+    private void addCategory()
+    {
+        
     }
 }
