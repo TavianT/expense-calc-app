@@ -2,6 +2,7 @@ package com.example.expensecalculatorapp;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -57,6 +59,13 @@ public class CreateExpenseFragment extends Fragment implements View.OnClickListe
     List<String> categoryList;
     List<String> accountList;
 
+    ArrayAdapter<String> categoryAdapter;
+    ArrayAdapter<String> accountAdapter;
+
+    FileManagement fileManagement;
+
+    final String categoryFile = "expenseCategoryList.txt";
+    final String accountFile = "expenseAccountList.txt";
     public CreateExpenseFragment() {
         // Required empty public constructor
     }
@@ -83,9 +92,9 @@ public class CreateExpenseFragment extends Fragment implements View.OnClickListe
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        FileManagement fileManagement = new FileManagement();
-        categoryList = fileManagement.ReadListFromFile("expenseCategoryList.txt",getActivity());
-        accountList = fileManagement.ReadListFromFile("expenseAccountList.txt",getActivity());
+        fileManagement = new FileManagement();
+        categoryList = fileManagement.ReadListFromFile(categoryFile, getActivity());
+        accountList = fileManagement.ReadListFromFile(accountFile, getActivity());
         final Calendar calendar = Calendar.getInstance();
         int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
         int currentMonth = calendar.get(Calendar.MONTH);
@@ -140,10 +149,10 @@ public class CreateExpenseFragment extends Fragment implements View.OnClickListe
         addAccountButton.setOnClickListener(this);
         addCategoryButton.setOnClickListener(this);
 
-        ArrayAdapter<String> categoryAdapter = new ArrayAdapter<>(getActivity().getBaseContext(), android.R.layout.simple_spinner_dropdown_item, categoryList);
+        categoryAdapter = new ArrayAdapter<>(getActivity().getBaseContext(), android.R.layout.simple_spinner_dropdown_item, categoryList);
+        accountAdapter = new ArrayAdapter<>(getActivity().getBaseContext(), android.R.layout.simple_spinner_dropdown_item, accountList);
         ArrayAdapter<CharSequence> currencyAdapter = ArrayAdapter.createFromResource(getActivity().getBaseContext(),R.array.expense_currency_array, android.R.layout.simple_spinner_dropdown_item);
         ArrayAdapter<CharSequence> paymentTypeAdapter = ArrayAdapter.createFromResource(getActivity().getBaseContext(),R.array.payment_type_array, android.R.layout.simple_spinner_dropdown_item);
-        ArrayAdapter<String> accountAdapter = new ArrayAdapter<>(getActivity().getBaseContext(), android.R.layout.simple_spinner_dropdown_item, accountList);
 
 
         categorySpinner.setAdapter(categoryAdapter);
@@ -201,6 +210,32 @@ public class CreateExpenseFragment extends Fragment implements View.OnClickListe
 
     private void addCategory()
     {
-        
+        final String hint = "Category";
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Add new category");
+
+        final View dialogLayout = getLayoutInflater().inflate(R.layout.add_diaglog_layout, null);
+        builder.setView(dialogLayout);
+
+        builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                EditText dialogText = dialogLayout.findViewById(R.id.addEditText);
+                fileManagement.WriteStringToFile(dialogText.getText().toString(), categoryFile, getActivity());
+                categoryList.add(dialogText.getText().toString());
+                categoryAdapter.notifyDataSetChanged();
+
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                //Close dialog and do nothing
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }

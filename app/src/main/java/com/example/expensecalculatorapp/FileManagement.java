@@ -24,6 +24,17 @@ public class FileManagement {
         }
         return false;
     }
+    public void WriteStringToFile(String newItem, String fileName, Context context)
+    {
+        try {
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput(fileName, Context.MODE_PRIVATE));
+            outputStreamWriter.write(newItem);
+            outputStreamWriter.write("\n");
+            outputStreamWriter.close();
+        } catch (IOException e) {
+            Log.e("Exception", "File write failed: " + e.toString());
+        }
+    }
     public void WriteListToFile(List<String> list, String fileName, Context context)
     {
         try {
