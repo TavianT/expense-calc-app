@@ -91,7 +91,6 @@ public class CreateExpenseFragment extends Fragment implements View.OnClickListe
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         fileManagement = new FileManagement();
         categoryList = fileManagement.ReadListFromFile(categoryFile, getActivity());
         accountList = fileManagement.ReadListFromFile(accountFile, getActivity());
@@ -172,6 +171,8 @@ public class CreateExpenseFragment extends Fragment implements View.OnClickListe
 
         } else if(v == addCategoryButton) {
             addCategory();
+        } else if(v == addAccountButton) {
+            addAccount();
         }
     }
 
@@ -205,16 +206,18 @@ public class CreateExpenseFragment extends Fragment implements View.OnClickListe
     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
         int realMonth = month + 1;
         dateTextView.setText(day + "/" + realMonth + "/" + year);
+        dateSelected = Calendar.getInstance();
         dateSelected.set(year, month, day);
     }
 
     private void addCategory()
     {
-        final String hint = "Category";
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Add new category");
 
         final View dialogLayout = getLayoutInflater().inflate(R.layout.add_diaglog_layout, null);
+        EditText dialogText = dialogLayout.findViewById(R.id.addEditText);
+        dialogText.setHint("Category");
         builder.setView(dialogLayout);
 
         builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
@@ -224,7 +227,37 @@ public class CreateExpenseFragment extends Fragment implements View.OnClickListe
                 fileManagement.WriteStringToFile(dialogText.getText().toString(), categoryFile, getActivity());
                 categoryList.add(dialogText.getText().toString());
                 categoryAdapter.notifyDataSetChanged();
+            }
+        });
 
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                //Close dialog and do nothing
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void addAccount()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Add new account");
+
+        final View dialogLayout = getLayoutInflater().inflate(R.layout.add_diaglog_layout, null);
+        EditText dialogText = dialogLayout.findViewById(R.id.addEditText);
+        dialogText.setHint("Account");
+        builder.setView(dialogLayout);
+
+        builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                EditText dialogText = dialogLayout.findViewById(R.id.addEditText);
+                fileManagement.WriteStringToFile(dialogText.getText().toString().trim(), accountFile, getActivity());
+                accountList.add(dialogText.getText().toString().trim());
+                accountAdapter.notifyDataSetChanged();
             }
         });
 
