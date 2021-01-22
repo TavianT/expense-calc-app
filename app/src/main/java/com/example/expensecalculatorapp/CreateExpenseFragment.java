@@ -21,12 +21,21 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.sql.Date;
+import java.sql.Time;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -54,7 +63,7 @@ public class CreateExpenseFragment extends Fragment implements View.OnClickListe
     int textColor;
 
     DatePickerDialog datePickerDialog;
-    Calendar dateSelected;
+    LocalDate dateSelected;
 
     List<String> categoryList;
     List<String> accountList;
@@ -92,16 +101,16 @@ public class CreateExpenseFragment extends Fragment implements View.OnClickListe
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         fileManagement = new FileManagement();
-        categoryList = fileManagement.ReadListFromFile(categoryFile, getActivity());
-        accountList = fileManagement.ReadListFromFile(accountFile, getActivity());
+        categoryList = fileManagement.ReadListFromFile(categoryFile, requireActivity());
+        accountList = fileManagement.ReadListFromFile(accountFile, requireActivity());
         final Calendar calendar = Calendar.getInstance();
         int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
         int currentMonth = calendar.get(Calendar.MONTH);
         int currentYear = calendar.get(Calendar.YEAR);
-        datePickerDialog = new DatePickerDialog(getContext(),this,currentYear,currentMonth,currentDay);
+        datePickerDialog = new DatePickerDialog(requireContext(),this,currentYear,currentMonth,currentDay);
 
         int nightModeFlags =
-                getContext().getResources().getConfiguration().uiMode &
+                requireContext().getResources().getConfiguration().uiMode &
                         Configuration.UI_MODE_NIGHT_MASK;
         switch (nightModeFlags) {
             case Configuration.UI_MODE_NIGHT_YES:
@@ -148,10 +157,10 @@ public class CreateExpenseFragment extends Fragment implements View.OnClickListe
         addAccountButton.setOnClickListener(this);
         addCategoryButton.setOnClickListener(this);
 
-        categoryAdapter = new ArrayAdapter<>(getActivity().getBaseContext(), android.R.layout.simple_spinner_dropdown_item, categoryList);
-        accountAdapter = new ArrayAdapter<>(getActivity().getBaseContext(), android.R.layout.simple_spinner_dropdown_item, accountList);
-        ArrayAdapter<CharSequence> currencyAdapter = ArrayAdapter.createFromResource(getActivity().getBaseContext(),R.array.expense_currency_array, android.R.layout.simple_spinner_dropdown_item);
-        ArrayAdapter<CharSequence> paymentTypeAdapter = ArrayAdapter.createFromResource(getActivity().getBaseContext(),R.array.payment_type_array, android.R.layout.simple_spinner_dropdown_item);
+        categoryAdapter = new ArrayAdapter<>(requireActivity().getBaseContext(), android.R.layout.simple_spinner_dropdown_item, categoryList);
+        accountAdapter = new ArrayAdapter<>(requireActivity().getBaseContext(), android.R.layout.simple_spinner_dropdown_item, accountList);
+        ArrayAdapter<CharSequence> currencyAdapter = ArrayAdapter.createFromResource(requireActivity().getBaseContext(),R.array.expense_currency_array, android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<CharSequence> paymentTypeAdapter = ArrayAdapter.createFromResource(requireActivity().getBaseContext(),R.array.payment_type_array, android.R.layout.simple_spinner_dropdown_item);
 
 
         categorySpinner.setAdapter(categoryAdapter);
@@ -168,6 +177,47 @@ public class CreateExpenseFragment extends Fragment implements View.OnClickListe
             datePickerDialog.show();
 
         } else if (v == submitButton) {
+            Expense expense;
+            String expenseName = expenseTitleTextView.getText().toString().trim();
+            String category = categorySpinner.getSelectedItem().toString().trim();
+            double amount = Double.parseDouble(amountEditText.getText().toString().trim());
+            String type = categorySpinner.getSelectedItem().toString().trim();
+            String memo = memoTextView.getText().toString().trim();
+            //If accountSpinner is visible
+            if (requireView().findViewById(R.id.accountSpinner).getVisibility() == View.VISIBLE) {
+                String account = accountSpinner.getSelectedItem().toString().trim();
+                expense = new Expense(expenseName, category, amount, dateSelected, type, account, memo);
+            } else {
+                expense = new Expense(expenseName, category, amount, dateSelected, type, memo);
+            }
+
+            ExecutorService executor = Executors.newSingleThreadExecutor();
+            executor.submit(() -> {
+                AppDatabase db = AppDatabase.getInstance(requireContext());
+                ExpenseDao dao = db.expenseDAO();
+                dao.insertExpense(expense);
+
+                //TEST CODE
+                List<Expense> expenses = dao.getAll();
+                Log.d("Database check", "Expense Name: " + expenses.get(0).expenseName);
+            });
+            try {
+                Log.i("Executor obj", "attempt to shutdown executor");
+                executor.shutdown();
+                executor.awaitTermination(10, TimeUnit.SECONDS);
+            }
+            catch (InterruptedException e) {
+                Log.e("Executor obj", "Task interrupted: " + e.toString());
+            }
+            finally {
+                if (!executor.isTerminated()) {
+                    Log.e("Executor obj", "Cancel non finished tasks");
+                }
+                executor.shutdownNow();
+                Log.d("Executor obj", "shutdown finished");
+                Toast.makeText(requireContext(), "Expense Submitted successfully", Toast.LENGTH_SHORT);
+
+            }
 
         } else if(v == addCategoryButton) {
             addCategory();
@@ -188,11 +238,11 @@ public class CreateExpenseFragment extends Fragment implements View.OnClickListe
             Log.d("payment spinner", "onItemSelected: adapterView.getItemAtPosition(pos) = " + adapterView.getItemAtPosition(pos));
             if (adapterView.getItemAtPosition(pos).toString().equals("Debit") || adapterView.getItemAtPosition(pos).toString().equals("Credit")) {
                 Log.d("payment spinner", "Reached second condition");
-                getView().findViewById(R.id.accountSpinner).setVisibility(View.VISIBLE);
-                getView().findViewById(R.id.addAccountFloatingActionButton).setVisibility(View.VISIBLE);
+                requireView().findViewById(R.id.accountSpinner).setVisibility(View.VISIBLE);
+                requireView().findViewById(R.id.addAccountFloatingActionButton).setVisibility(View.VISIBLE);
             } else {
-                getView().findViewById(R.id.accountSpinner).setVisibility(View.GONE);
-                getView().findViewById(R.id.addAccountFloatingActionButton).setVisibility(View.GONE);
+                requireView().findViewById(R.id.accountSpinner).setVisibility(View.GONE);
+                requireView().findViewById(R.id.addAccountFloatingActionButton).setVisibility(View.GONE);
             }
         }
     }
@@ -205,9 +255,10 @@ public class CreateExpenseFragment extends Fragment implements View.OnClickListe
     @Override
     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
         int realMonth = month + 1;
-        dateTextView.setText(day + "/" + realMonth + "/" + year);
-        dateSelected = Calendar.getInstance();
-        dateSelected.set(year, month, day);
+        String date = day + "/" + realMonth + "/" + year;
+        dateTextView.setText(date);
+        dateSelected = LocalDate.of(year, realMonth, day);
+
     }
 
     private void addCategory()
@@ -224,7 +275,7 @@ public class CreateExpenseFragment extends Fragment implements View.OnClickListe
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 EditText dialogText = dialogLayout.findViewById(R.id.addEditText);
-                fileManagement.WriteStringToFile(dialogText.getText().toString(), categoryFile, getActivity());
+                fileManagement.WriteStringToFile(dialogText.getText().toString(), categoryFile, requireActivity());
                 categoryList.add(dialogText.getText().toString());
                 categoryAdapter.notifyDataSetChanged();
             }
@@ -255,7 +306,7 @@ public class CreateExpenseFragment extends Fragment implements View.OnClickListe
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 EditText dialogText = dialogLayout.findViewById(R.id.addEditText);
-                fileManagement.WriteStringToFile(dialogText.getText().toString().trim(), accountFile, getActivity());
+                fileManagement.WriteStringToFile(dialogText.getText().toString().trim(), accountFile, requireActivity());
                 accountList.add(dialogText.getText().toString().trim());
                 accountAdapter.notifyDataSetChanged();
             }

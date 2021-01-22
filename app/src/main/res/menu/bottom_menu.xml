@@ -17,6 +17,11 @@
         android:icon="@drawable/ic_baseline_attach_money"/>
 
     <item
+        android:id="@+id/visualiseExpensesFragment"
+        android:title="Visualise Expenses"
+        android:icon="@drawable/ic_baseline_bar_chart"/>
+
+    <item
         android:id="@+id/aboutFragment"
         android:title="About"
         android:icon="@drawable/ic_baseline_help"/>
