@@ -14,4 +14,9 @@
         android:name="com.example.expensecalculatorapp.CreateExpenseFragment"
         android:label="Create an Expense"
         tools:layout="@layout/fragment_create_expense" />
+    <fragment
+        android:id="@+id/viewExpensesFragment"
+        android:name="com.example.expensecalculatorapp.ViewExpensesFragment"
+        android:label="Expenses"
+        tools:layout="@layout/fragment_view_expenses" />
 </navigation>

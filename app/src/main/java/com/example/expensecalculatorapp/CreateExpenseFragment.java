@@ -24,6 +24,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.mobsandgeeks.saripaar.ValidationError;
+import com.mobsandgeeks.saripaar.Validator;
+import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 
 import java.sql.Date;
 import java.sql.Time;
@@ -42,7 +45,7 @@ import java.util.concurrent.TimeUnit;
  * Use the {@link CreateExpenseFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CreateExpenseFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener, DatePickerDialog.OnDateSetListener {
+public class CreateExpenseFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener, DatePickerDialog.OnDateSetListener, Validator.ValidationListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -53,16 +56,21 @@ public class CreateExpenseFragment extends Fragment implements View.OnClickListe
     private String mParam1;
     private String mParam2;
 
+    @NotEmpty
     AutoCompleteTextView expenseTitleTextView, memoTextView;
     Spinner categorySpinner, currencySpinner, paymentTypeSpinner, accountSpinner;
     FloatingActionButton addCategoryButton, addAccountButton;
+    @NotEmpty
     EditText amountEditText;
+
     Button selectDateButton, submitButton;
+
     TextView dateTextView;
 
     int textColor;
 
     DatePickerDialog datePickerDialog;
+    @NotEmpty
     LocalDate dateSelected;
 
     List<String> categoryList;
@@ -72,6 +80,7 @@ public class CreateExpenseFragment extends Fragment implements View.OnClickListe
     ArrayAdapter<String> accountAdapter;
 
     FileManagement fileManagement;
+    Validator validator;
 
     final String categoryFile = "expenseCategoryList.txt";
     final String accountFile = "expenseAccountList.txt";
@@ -107,6 +116,8 @@ public class CreateExpenseFragment extends Fragment implements View.OnClickListe
         int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
         int currentMonth = calendar.get(Calendar.MONTH);
         int currentYear = calendar.get(Calendar.YEAR);
+        validator = new Validator(this);
+        validator.setValidationListener(this);
         datePickerDialog = new DatePickerDialog(requireContext(),this,currentYear,currentMonth,currentDay);
 
         int nightModeFlags =
@@ -177,29 +188,15 @@ public class CreateExpenseFragment extends Fragment implements View.OnClickListe
             datePickerDialog.show();
 
         } else if (v == submitButton) {
-            Expense expense;
-            String expenseName = expenseTitleTextView.getText().toString().trim();
-            String category = categorySpinner.getSelectedItem().toString().trim();
-            double amount = Double.parseDouble(amountEditText.getText().toString().trim());
-            String type = categorySpinner.getSelectedItem().toString().trim();
-            String memo = memoTextView.getText().toString().trim();
-            //If accountSpinner is visible
-            if (requireView().findViewById(R.id.accountSpinner).getVisibility() == View.VISIBLE) {
-                String account = accountSpinner.getSelectedItem().toString().trim();
-                expense = new Expense(expenseName, category, amount, dateSelected, type, account, memo);
-            } else {
-                expense = new Expense(expenseName, category, amount, dateSelected, type, memo);
-            }
+            validator.validate();
 
-            ExecutorService executor = Executors.newSingleThreadExecutor();
+           /* ExecutorService executor = Executors.newSingleThreadExecutor();
             executor.submit(() -> {
-                AppDatabase db = AppDatabase.getInstance(requireContext());
-                ExpenseDao dao = db.expenseDAO();
-                dao.insertExpense(expense);
+
 
                 //TEST CODE
-                List<Expense> expenses = dao.getAll();
-                Log.d("Database check", "Expense Name: " + expenses.get(0).expenseName);
+                //List<Expense> expenses = dao.getAll();
+                //Log.d("Database check", "Expense Name: " + expenses.get(0).expenseName);
             });
             try {
                 Log.i("Executor obj", "attempt to shutdown executor");
@@ -215,9 +212,9 @@ public class CreateExpenseFragment extends Fragment implements View.OnClickListe
                 }
                 executor.shutdownNow();
                 Log.d("Executor obj", "shutdown finished");
-                Toast.makeText(requireContext(), "Expense Submitted successfully", Toast.LENGTH_SHORT);
+                Toast.makeText(requireContext(), "Expense Submitted successfully", Toast.LENGTH_SHORT).show();
 
-            }
+            } */
 
         } else if(v == addCategoryButton) {
             addCategory();
@@ -321,5 +318,55 @@ public class CreateExpenseFragment extends Fragment implements View.OnClickListe
 
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    @Override
+    public void onValidationSucceeded() {
+        if (dateSelected == null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+            builder.setMessage("Please select a date");
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    //User clicked ok
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+            return;
+        }
+        Expense expense;
+        String expenseName = expenseTitleTextView.getText().toString().trim();
+        String category = categorySpinner.getSelectedItem().toString().trim();
+        double amount = Double.parseDouble(amountEditText.getText().toString().trim());
+        String type = paymentTypeSpinner.getSelectedItem().toString().trim();
+        String memo = memoTextView.getText().toString().trim();
+        //If accountSpinner is visible
+        if (requireView().findViewById(R.id.accountSpinner).getVisibility() == View.VISIBLE) {
+            String account = accountSpinner.getSelectedItem().toString().trim();
+            expense = new Expense(expenseName, category, amount, dateSelected, type, account, memo);
+        } else {
+            expense = new Expense(expenseName, category, amount, dateSelected, type, "", memo);
+        }
+
+        new Thread(() -> {
+            AppDatabase db = AppDatabase.getInstance(requireContext());
+            ExpenseDao dao = db.expenseDAO();
+            dao.insertExpense(expense);
+        }).start();
+    }
+
+    @Override
+    public void onValidationFailed(List<ValidationError> errors) {
+        for (ValidationError error : errors) {
+            View view = error.getView();
+            String message = error.getCollatedErrorMessage(requireContext());
+            // Display error messages
+            if (view instanceof EditText) {
+                ((EditText) view).setError(message);
+            } else {
+                Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }

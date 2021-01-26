@@ -31,7 +31,6 @@ public class Expense {
     @ColumnInfo(name = "memo")
     public String memo;
 
-    @Ignore
     Expense(String expenseName, String category, double amount, LocalDate date, String type, String account, String memo)
     {
         this.expenseName = expenseName;
@@ -43,7 +42,7 @@ public class Expense {
         this.memo = memo;
     }
 
-    Expense(String expenseName, String category, double amount, LocalDate date, String type, String memo)
+   /* Expense(String expenseName, String category, double amount, LocalDate date, String type, String memo)
     {
         this.expenseName = expenseName;
         this.category = category;
@@ -51,6 +50,6 @@ public class Expense {
         this.date = date;
         this.type = type;
         this.memo = memo;
-    }
+    } */
 
 }
