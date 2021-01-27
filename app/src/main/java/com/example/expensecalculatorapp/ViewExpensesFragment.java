@@ -67,6 +67,14 @@ public class ViewExpensesFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        // Inflate the layout for this fragment
         expenseNames = new ArrayList<String>();
         expenseDates = new ArrayList<LocalDate>();
         expenseAmounts = new ArrayList<Double>();
@@ -90,7 +98,6 @@ public class ViewExpensesFragment extends Fragment {
             Log.d("Executor obj", "shutdown finished");
 
         }
-
         int i = 0; //DELETE LATER
         for (final Expense expense : expenses) {
             expenseNames.add(expense.expenseName);
@@ -99,12 +106,6 @@ public class ViewExpensesFragment extends Fragment {
             expenseDates.add(expense.date);
             i++;
         }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_view_expenses, container, false);
         recyclerView = v.findViewById(R.id.expensesRecyclerView);
 

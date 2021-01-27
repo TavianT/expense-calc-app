@@ -1,6 +1,7 @@
 package com.example.expensecalculatorapp;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +45,7 @@ public class ExpenseRecyclerAdapter extends RecyclerView.Adapter<ExpenseRecycler
 
     @Override
     public int getItemCount() {
+        Log.d("view expenses page", "recycler size: " + expenseNames.size());
         return expenseNames.size();
     }
 
