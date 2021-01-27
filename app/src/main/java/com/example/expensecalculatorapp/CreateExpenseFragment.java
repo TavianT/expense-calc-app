@@ -26,6 +26,9 @@ import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
+import com.mobsandgeeks.saripaar.annotation.DecimalMax;
+import com.mobsandgeeks.saripaar.annotation.DecimalMin;
+import com.mobsandgeeks.saripaar.annotation.Digits;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 
 import java.sql.Date;
@@ -60,6 +63,8 @@ public class CreateExpenseFragment extends Fragment implements View.OnClickListe
     AutoCompleteTextView expenseTitleTextView, memoTextView;
     Spinner categorySpinner, currencySpinner, paymentTypeSpinner, accountSpinner;
     FloatingActionButton addCategoryButton, addAccountButton;
+    @DecimalMin(0.01)
+    @DecimalMax(9999.99)
     @NotEmpty
     EditText amountEditText;
 

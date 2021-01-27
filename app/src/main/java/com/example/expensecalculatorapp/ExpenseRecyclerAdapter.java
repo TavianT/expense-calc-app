@@ -6,8 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.time.LocalDate;
@@ -41,6 +43,13 @@ public class ExpenseRecyclerAdapter extends RecyclerView.Adapter<ExpenseRecycler
         holder.amountTextView.setText(expenseAmounts.get(position).toString());
         String dateString = Converters.localDateToString(expenseDates.get(position));
         holder.dateTextView.setText(dateString);
+
+        holder.layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context,"You clicked " + expenseNames.get(position), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -51,11 +60,13 @@ public class ExpenseRecyclerAdapter extends RecyclerView.Adapter<ExpenseRecycler
 
     public class ExpenseRecyclerHolder extends RecyclerView.ViewHolder{
         TextView nameTextView, amountTextView, dateTextView;
+        ConstraintLayout layout;
         public ExpenseRecyclerHolder(@NonNull View itemView) {
             super(itemView);
             nameTextView = itemView.findViewById(R.id.expense_row_title);
             amountTextView = itemView.findViewById(R.id.expense_row_amount);
             dateTextView = itemView.findViewById(R.id.expense_row_date);
+            layout = itemView.findViewById(R.id.recycler_row);
         }
     }
 }
