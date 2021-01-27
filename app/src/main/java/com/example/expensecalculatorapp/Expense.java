@@ -7,7 +7,7 @@ import java.time.LocalDate;
 @Entity(tableName = "Expenses")
 public class Expense {
 
-    @PrimaryKey
+    @PrimaryKey (autoGenerate = true)
     public int id;
 
     @ColumnInfo (name = "name")
