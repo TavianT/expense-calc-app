@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView = findViewById(R.id.bottom_menu);
         navController = Navigation.findNavController(this,R.id.fragment);
 
-        //TODO: Add viewExpensesFragment and aboutFragment to this
+        //TODO: Add visualiseExpensesFragment and aboutFragment to this
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(R.id.homePageFragment,R.id.createExpenseFragment).build();
 
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
