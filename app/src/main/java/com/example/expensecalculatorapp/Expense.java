@@ -42,14 +42,4 @@ public class Expense {
         this.memo = memo;
     }
 
-   /* Expense(String expenseName, String category, double amount, LocalDate date, String type, String memo)
-    {
-        this.expenseName = expenseName;
-        this.category = category;
-        this.amount = amount;
-        this.date = date;
-        this.type = type;
-        this.memo = memo;
-    } */
-
 }

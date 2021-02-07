@@ -98,18 +98,15 @@ public class ViewExpensesFragment extends Fragment {
             Log.d("Executor obj", "shutdown finished");
 
         }
-        int i = 0; //DELETE LATER
         for (final Expense expense : expenses) {
             expenseNames.add(expense.expenseName);
-            Log.d("Expense values from db", "Expense name: " + expenseNames.get(i));
             expenseAmounts.add(expense.amount);
             expenseDates.add(expense.date);
-            i++;
         }
         View v = inflater.inflate(R.layout.fragment_view_expenses, container, false);
         recyclerView = v.findViewById(R.id.expensesRecyclerView);
 
-        ExpenseRecyclerAdapter expenseRecyclerAdapter = new ExpenseRecyclerAdapter(requireContext(), expenseNames, expenseAmounts, expenseDates);
+        ExpenseRecyclerAdapter expenseRecyclerAdapter = new ExpenseRecyclerAdapter(requireContext(), expenseNames, expenseAmounts, expenseDates, expenses);
         recyclerView.setAdapter(expenseRecyclerAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 

@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -15,6 +16,10 @@ import android.view.ViewGroup;
  */
 public class SingleExpenseFragment extends Fragment {
 
+    TextView titleTextView, categoryTextView, amountTextView, dateTextView, typeTextView, accountTextView, memoTextView;
+
+    String expenseName, category, date, type, account, memo;
+    double amount;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -28,20 +33,9 @@ public class SingleExpenseFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment SingleExpenseFragment.
-     */
     // TODO: Rename and change types and number of parameters
-    public static SingleExpenseFragment newInstance(String param1, String param2) {
+    public static SingleExpenseFragment newInstance(Bundle args) {
         SingleExpenseFragment fragment = new SingleExpenseFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -49,16 +43,40 @@ public class SingleExpenseFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        expenseName = requireArguments().getString("name");
+        category = requireArguments().getString("category");
+        amount = requireArguments().getDouble("amount");
+        date = requireArguments().getString("date");
+        type = requireArguments().getString("type");
+        account = requireArguments().getString("account");
+        memo = requireArguments().getString("memo");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_single_expense, container, false);
+        View v =  inflater.inflate(R.layout.fragment_single_expense, container, false);
+        titleTextView = v.findViewById(R.id.singleExpenseTitleTextView);
+        categoryTextView = v.findViewById(R.id.singleExpenseCategoryTextView);
+        amountTextView = v.findViewById(R.id.singleExpenseAmountTextView);
+        dateTextView = v.findViewById(R.id.singleExpenseDateTextView);
+        typeTextView = v.findViewById(R.id.singleExpenseTypeTextView);
+        accountTextView = v.findViewById(R.id.singleExpenseAccountTextView);
+        memoTextView = v.findViewById(R.id.singleExpenseMemoTextView);
+
+        titleTextView.setText(expenseName);
+        categoryTextView.setText(category);
+        amountTextView.setText(String.valueOf(amount));
+        dateTextView.setText(date);
+        typeTextView.setText(type);
+        if (!account.equals("")) {
+            accountTextView.setText(account);
+        } else {
+            accountTextView.setVisibility(View.GONE);
+        }
+        memoTextView.setText(memo);
+
+        return v;
     }
 }

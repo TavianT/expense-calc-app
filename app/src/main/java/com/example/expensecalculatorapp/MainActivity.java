@@ -3,6 +3,8 @@ package com.example.expensecalculatorapp;
 import com.example.expensecalculatorapp.FileManagement;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -61,5 +63,34 @@ public class MainActivity extends AppCompatActivity {
     private void createListFile(FileManagement fileManagement, String fileName,List<String> list)
     {
             fileManagement.WriteListToFile(list, fileName, this);
+    }
+
+    public void startSingleExpenseFragment(Expense expense, String dateString)
+    {
+        Bundle bundle = new Bundle();
+        bundle.putString("name", expense.expenseName);
+        bundle.putString("category", expense.category);
+        bundle.putDouble("amount", expense.amount);
+        bundle.putString("date", dateString);
+        bundle.putString("type", expense.type);
+        bundle.putString("account", expense.account);
+        bundle.putString("memo", expense.memo);
+        FragmentManager manager = getSupportFragmentManager();
+        SingleExpenseFragment singleExpenseFragment = new SingleExpenseFragment();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace(R.id.main_activity, singleExpenseFragment.getClass(), bundle, null).addToBackStack(null);
+        transaction.commit();
+       /* try {
+            getFragmentManager()
+                    .beginTransaction()
+                    .setReorderingAllowed(true)
+                    .addToBackStack(null)
+                    .replace(R.id.main_activity, SingleExpenseFragment.class.newInstance(), bundle)
+                    .commit();
+        } catch (IllegalAccessException e) {
+            Log.e("startSingleExpenseFragment",  e.toString());
+        } catch (InstantiationException e) {
+            Log.e("startSingleExpenseFragment",  e.toString());
+        } */
     }
 }

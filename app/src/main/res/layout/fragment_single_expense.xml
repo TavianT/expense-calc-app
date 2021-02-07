@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SingleExpenseFragment">
+    tools:context=".SingleExpenseFragment"
+    android:id="@+id/SingleExpenseFragmentView">
 
 
     <Button
@@ -37,21 +38,97 @@
         android:layout_marginStart="176dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="177dp"
+        android:maxLines="1"
         android:text="Title"
-        android:textSize="30sp"
+        android:textAlignment="center"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/SingleExpenseMemoTextView"
-        android:layout_width="0dp"
+        android:id="@+id/singleExpenseMemoTextView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="35dp"
-        android:layout_marginEnd="20dp"
-        android:text="Lorem ipsum Lorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsum"
+        android:layout_marginStart="176dp"
+        android:layout_marginTop="70dp"
+        android:layout_marginEnd="177dp"
+        android:text="Memo"
+        android:textSize="14sp"
+        android:maxLines="5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/singleExpenseAccountTextView" />
+
+    <TextView
+        android:id="@+id/singleExpenseCategoryTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="168dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="168dp"
+        android:text="Category"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.333"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/singleExpenseTitleTextView" />
+
+    <TextView
+        android:id="@+id/singleExpenseAmountTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="168dp"
+        android:layout_marginTop="35dp"
+        android:layout_marginEnd="168dp"
+        android:text="Amount"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/singleExpenseCategoryTextView" />
+
+    <TextView
+        android:id="@+id/singleExpenseDateTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="168dp"
+        android:layout_marginTop="35dp"
+        android:layout_marginEnd="168dp"
+        android:text="Date"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/singleExpenseAmountTextView" />
+
+    <TextView
+        android:id="@+id/singleExpenseTypeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="168dp"
+        android:layout_marginTop="35dp"
+        android:layout_marginEnd="168dp"
+        android:text="Type"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/singleExpenseDateTextView" />
+
+    <TextView
+        android:id="@+id/singleExpenseAccountTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="168dp"
+        android:layout_marginTop="35dp"
+        android:layout_marginEnd="168dp"
+        android:text="Account"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/singleExpenseTypeTextView" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
